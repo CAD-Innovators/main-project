@@ -1,0 +1,510 @@
+<MainScreen>:
+
+    EmergencyWidget:
+        id: emergency_widget  # Add an ID for dynamic control
+
+
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+        RelativeLayout:  # Wrap the first button in a RelativeLayout
+            size_hint_x: 0.5
+            Button:
+                text: 'KEYBOARD'
+                font_size: 30
+                background_color: 0.737, 0.878, 0.906, 0.8  # light blue
+                on_release:
+                    root.manager.current = 'keyboard'
+
+            Image:
+                source: 'Images/KEYBOARD.png'  # Replace with your image path
+                size_hint: None, None
+                size: 200, 200  # Image size
+                pos_hint: {"x": 0, "center_y": 0.5}  # Position the image
+                opacity: 0 if root.is_emergency_visible else 1  # Hide when EmergencyWidget is visible
+
+        RelativeLayout:  # Wrap the second button in a RelativeLayout
+            size_hint_x: 0.5
+            Button:
+                text: 'REMOTE'
+                font_size: 30
+                background_color: 0.851, 0.737, 0.906, 0.8  # light purple
+                on_release:
+                    root.manager.current = 'iot'
+
+            Image:
+                source: 'Images/REMOTE.png'  # Replace with your image path
+                size_hint: None, None
+                size: 200, 200  # Image size
+                pos_hint: {"right": 1, "center_y": 0.5}  # Position the image
+                opacity: 0 if root.is_emergency_visible else 1  # Hide when EmergencyWidget is visible
+
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0  # Background color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Button:
+            background_normal: 'Images/EMERGENCY.png'  # Image path
+            background_down: 'Images/EMERGENCY_PRESSED.png'  # Optional, different image when pressed
+            size_hint: None, None
+            size: 300, 300  # Size of the image
+            pos_hint: {"center_x": 0.5, "top": 1}
+            on_release:
+                # Perform your button action here
+                root.show_emergency_widget()
+
+<CameraWidget>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1  # White background for the widget
+            Ellipse:
+                pos: self.pos
+                size: self.size
+
+        Image:
+            id: camera_feed  # Reference to the image widget
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: None, None  # Control the size if necessary
+            size: self.parent.size  # Make it take the size of the parent (circular mask)
+
+        Label:
+            id: direction_label  # Label to display eye direction
+            text: "Direction: Unknown"
+            size_hint: None, None
+            pos_hint: {"center_x": 0.5, "y": 0.1}
+            font_size: '20sp'
+            color: 1, 1, 1, 1  # Black text color for visibility
+
+
+<TypeScreen>:
+    typing_widget: typing_widget  # Link Python's ObjectProperty to this TextInput
+
+    ListWidget:
+        id: list_widget  # Add an ID for dynamic control
+
+    SearchWidget:
+        id: search_widget
+
+    FloatLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.737, 0.878, 0.906, 1  # light blue@krupa change color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Button:
+            background_normal: 'Images/HOME.png'  # give keyboard icon@krupa 
+            background_down: 'Images/HOME_PRESSED.png'  # Optional, different image when pressed
+            size_hint: None, None
+            size: 250, 250  # Size of the image
+            pos_hint: {"center_x": 0.5, "top": 1}
+            on_release: root.go_home()  # Call the go_home method when released
+        
+        Button:
+            background_normal: 'Images/LIST.png'  # Replace @krupa
+            size_hint: None, None
+            size: 250, 250  # Size of the image
+            pos_hint: {"right": 1, "center_y": 0.5}  # Position the image
+            opacity: 1 #check @krupa
+        
+        Button:
+            background_normal: 'Images/HELP.png'  # Replace @krupa
+            size_hint: None, None
+            size: 250, 250  # Size of the image
+            pos_hint: {"bottom": 1, "center_x": 0.5}  # Position the image
+            opacity: 1 #check @krupa
+
+        Button:
+            background_normal: 'Images/TYPE.png'  # Replace @krupa
+            size_hint: None, None
+            size: 250, 250  # Size of the image
+            pos_hint: {"x": 0, "center_y": 0.5} # Position the image
+            opacity: 1 #check @krupa
+
+    # New BoxLayout for TextInput
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 200, 200, 200, 200  # Padding: left, top, right, bottom
+        spacing: 10  # Space between widgets
+
+        # Add TextInput with transparent background
+        TextInput:
+            id: typing_widget  # Assign an ID for referencing
+            multiline: True  # Single line input
+            height: self.minimum_height  # Adjust height to fit content
+            hint_text: "Type here..."  # Placeholder text
+            background_color: (0, 0, 0, 0)  # Transparent background
+            foreground_color: (0, 0, 0, 1)  # Black text
+            cursor_color: (0, 0, 0, 1)  # Black cursor
+            border: (0, 0, 0, 0)  # No border
+            font_size: 40  # Increase font size
+
+<SearchWidget>:
+    
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 0.5
+        pos_hint: {'right': 1}  # This positions the widget from the right
+        background_color: 0.4, 0.514, 0.475, 1  # sap green
+
+    ScrollView:
+        id: search_widget
+        opacity: 1
+        size_hint: (1, 1)
+        do_scroll_x: False
+        do_scroll_y: True
+
+        canvas.before:
+            Color:
+                rgba: 0.4, 0.514, 0.475, 1  # sap green
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        
+        GridLayout:
+            cols: 1
+            size_hint_y: None
+            height: self.minimum_height  # Dynamically update based on content
+            
+            Label:
+                id: results_label
+                text: "Search results will appear here"
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'top'
+                padding: [10, 10]
+
+
+<ListWidget>:
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_x: 0.5  # Adjust size as per design 
+        pos_hint: {"right": 1,"center_y": 0.5} 
+
+        GridLayout:
+            id:grid_layout1
+            cols: 1
+            rows: 6  # 5 phrases + padding
+            spacing: 10
+            padding: 10
+
+            # Alternating colors for buttons
+            Button:
+                text: 'Speak'
+                font_size: 24
+                background_color: 0.85, 0.92, 1, 1  # light blue
+                on_press: root.speak_user_input()
+
+            Button:
+                text: 'Basic Word'
+                font_size: 24
+                background_color: 0.7, 0.85, 0.9, 1  # slightly darker blue
+
+            Button:
+                text: 'Chat'
+                font_size: 24
+                background_color: 0.85, 0.92, 1, 1  # light blue
+
+            Button:
+                text: 'Search'
+                font_size: 24
+                background_color: 0.7, 0.85, 0.9, 1  # slightly darker blue
+                on_press: root.search_google()
+
+            Button:
+                text: 'Youtube'
+                font_size: 24
+                background_color: 0.7, 0.85, 0.9, 1  # slightly darker blue
+    
+
+<HelpScreen>:
+    FloatLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.737, 0.878, 0.906, 1  # light blue
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            background_normal: 'Images/HOME.png'  # Replace with your home icon image path
+            background_down: 'Images/HOME_PRESSED.png'  # Optional, different image when pressed
+            size_hint: None, None
+            size: 250, 250  # Size of the image
+            pos_hint: {"center_x": 0.5, "top": 1}
+            on_release: root.go_home()  # Call the go_home method when released
+        
+
+<EmergencyWidget>:
+    FloatLayout:
+        Image:
+            source: 'Images/ALERT.png'  # Path to your background image
+            allow_stretch: True  # Allow the image to stretch
+            keep_ratio: True  # Maintain the aspect ratio
+            size_hint_y: None  # Disable automatic height sizing
+            height: 1000
+            size_hint_x: 1  # Set full width of the screen
+            pos_hint: {"top": 1}  # Align the image to the top of the widget
+
+
+<KeyboardScreen>:
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: 2
+        
+        canvas.before:
+            Color:
+                rgba: 0.737, 0.878, 0.906, 1  # light blue background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Left Column: Type New Button
+        BoxLayout:
+            id: left_box
+            orientation: 'vertical'
+            size_hint_x: 0.5  # Start with 0.5 size hint
+            RelativeLayout:
+                Button:
+                    id: left_text
+                    text: 'TYPE\nNEW'
+                    font_size: 28
+                    background_color: 0.2078, 0.3765, 0.6588, 0.62  # light blue
+                    on_release: root.type_new_page()  # Add method to navigate to typing page
+
+                Image:
+                    source: 'Images/TYPE.png'  # Replace with your image path
+                    size_hint: None, None
+                    size: 200, 200  # Image size
+                    pos_hint: {"x": 0, "center_y": 0.5}  # Position the image
+                    
+
+        # Main List Area with Phrases and Speak Buttons
+        BoxLayout:
+            id: right_box
+            orientation: 'vertical'
+            size_hint_x: 0.5  # Start with 0.5 size hint
+
+            RelativeLayout:
+                
+                FloatLayout:
+                    RelativeLayout:
+                        opacity: 1
+                        Button:
+                            id:basic_phrase
+                            text: 'BASIC\nPHRASE'
+                            font_size: 28
+                            #size_hint: 1, 1
+                            background_color: 0.149, 0.584, 0.361, 0.68  # light green
+
+                        Image:
+                            source: 'Images/LIST.png'  # Replace with your image path
+                            size_hint: None, None
+                            size: 200, 200  # Image size
+                            pos_hint: {"right": 1, "center_y": 0.5}  # Position the image
+                            
+
+                ScrollView:
+                    do_scroll_y: True
+                    do_scroll_x: False
+                    id: scroll_view
+
+                    GridLayout:
+                        id: grid_layout
+                        cols: 1
+                        height: self.minimum_height  # Adjust height based on the content
+                        row_default_height: 100       # Default height of each row (optional)
+                        row_force_default: True      # Enforce default row height (optional)
+                        spacing: 2
+                        padding: 0
+                        opacity: 0
+                        size_hint_y: None
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            text: 'HELLO'
+                            font_size: 24
+                            size_hint_y: None  # Fill available width, auto height
+                            height: 100
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'WATER'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            size_hint_y: None
+                            height: 100
+                            text: 'HUNGRY'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'MEDICINE'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            size_hint_y: None
+                            height: 100
+                            text: 'SLEEPY'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'PAIN'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            size_hint_y: None
+                            height: 100
+                            text: 'TV'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'I\'M FINE'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            size_hint_y: None
+                            height: 100
+                            text: 'THANK YOU'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'BYE'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE.png'  # Default image
+                            size_hint_y: None
+                            height: 100
+                            text: 'SORRY'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+                        Button:
+                            background_normal: 'Images/PHRASE_ALT.png'  # Alternate background image
+                            size_hint_y: None
+                            height: 100
+                            text: 'HELP'
+                            font_size: 24
+                            keep_ratio: True
+                            allow_stretch: False
+
+    # Floating Home button on top
+    FloatLayout:
+        id: home_button
+        size_hint: None, None
+        pos_hint: {"center_x": 0.5, "top": 1}  # Position at the top of the screen
+
+        Button:
+            background_normal: 'Images/HOME.png'  # Home button image
+            size_hint: None, None
+            size: 250, 250  # Adjust size of the button
+            pos_hint: {"center_x": 0.5, "top": 1}  # Center the home button
+            on_release: root.go_home()  # Go back to home screen
+
+
+
+<IoTScreen>:
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas.before:
+            Color:
+                rgba: 0.851, 0.737, 0.906, 1  # light purple
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        
+        Button:
+            id: fan_button
+            text: 'FAN'
+            font_size: 30
+            background_color: 0.900, 0.600, 0.906, 1  # light purple
+            size_hint_x: 0.5
+            padding: [0, 0, 0, 100]
+            on_release:
+                root.select_device('fan')  # Call select_device method with 'fan'
+
+        Button:
+            id: light_button
+            text: 'LIGHT'
+            font_size: 30
+            background_color: 0.6471, 0.3804, 0.8353, 1  # light violet
+            size_hint_x: 0.5
+            padding: [0, 0, 0, 100]
+            on_release:
+                root.select_device('light')  # Call select_device method with 'light'
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0  # Background color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Button:
+            background_normal: 'Images/HOMER.png'  # Replace with your home icon image path
+            background_down: 'Images/HOMER_PRESSED.png'  # Optional, different image when pressed
+            size_hint: None, None
+            size: 300, 300  # Size of the image
+            pos_hint: {"center_x": 0.5, "top": 1}
+            on_release: root.go_home()  # Call the go_home method when released
