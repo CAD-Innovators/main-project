@@ -1,0 +1,10 @@
+opencv-python
+mediapipe
+kivy
+kivy-garden.xcamera
+kivymd
+numpy
+scipy
+dlib
+pyttsx3
+requests
